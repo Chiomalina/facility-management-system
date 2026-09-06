@@ -289,4 +289,18 @@ textarea:focus {
   h2 {
     font-size: 1.4rem;
   }
+
+  .sidebar {
+    display: none;
+    width: 100%;
+    min-height: auto;
+  }
+
+  .sidebar.show {
+    display: block;
+  }
+
+  .main-content {
+    width: 100%;
+  }
 }
