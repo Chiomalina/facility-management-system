@@ -25,5 +25,16 @@ $(function () {
   // Toggle sidebar visibility on mobile
   $("#sidebarToggle").on("click", function () {
     $(".sidebar").toggleClass("show");
+
+    const isOpen = $(".sidebar").hasClass("show");
+
+    $(this).attr("aria-expanded", isOpen);
+  });
+
+  // Reset sidebar state when returning to desktop size
+  $(window).on("resize", function () {
+    if ($(window).width() >= 768) {
+      $(".sidebar").removeClass("show");
+    }
   });
 });
