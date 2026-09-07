@@ -75,7 +75,7 @@ $(function () {
   // Render maintenance requests
   maintenanceRequests.forEach(function (request) {
     $("#maintenanceTableBody").append(`
-    <tr>
+    <tr data-status="${request.status}">
       <td class="fw-semibold">#${request.id}</td>
       <td>${request.facility}</td>
       <td>${request.issue}</td>
@@ -87,6 +87,121 @@ $(function () {
       </td>
       <td>${request.date}</td>
     </tr>
+  `);
+  });
+
+  // Filter maintenance requests by status
+  $("#maintenanceFilter").on("change", function () {
+    const selectedStatus = $(this).val();
+
+    $("#maintenanceTableBody tr").each(function () {
+      const rowStatus = $(this).data("status");
+
+      if (selectedStatus == "All" || rowStatus == selectedStatus) {
+        $(this).show();
+      } else {
+        $(this).hide();
+      }
+    });
+  });
+
+  // Facility overview data
+  const facilities = [
+    {
+      name: "Head Office",
+      occupancy: 82,
+      status: "Operational",
+    },
+    {
+      name: "Warehouse A",
+      occupancy: 64,
+      status: "Operational",
+    },
+    {
+      name: "Administration Block",
+      occupancy: 91,
+      status: "Maintenance",
+    },
+    {
+      name: "Teachers Block",
+      occupancy: 91,
+      status: "Maintenance",
+    },
+  ];
+
+  // Render facility overview
+  facilities.forEach(function (facility) {
+    $(".facilityOverview").append(`
+      <div class="mb-4">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <div>
+          <p class="fw-semibold mb-0">${facility.name}</p>
+          <small class="text-muted">${facility.status}</small>
+        </div>
+
+        <span class="fw-semibold">${facility.occupancy}%</span>
+      </div>
+      
+
+      <div
+        class="progress"
+        role="progressbar"
+        aria-label="${facility.name} occupancy"
+        aria-valuenow="${facility.occupancy}"
+        aria-valuemin="0"
+        aria-valuemax="100"
+      >
+        <div
+          class="progress-bar"
+          style="width: ${facility.occupancy}%"
+        ></div>
+      </div>
+    </div>
+      `);
+  });
+
+  // Recent activity data
+  const recentActivities = [
+    {
+      icon: "bi-tools",
+      title: "Maintenance request created",
+      description: "Air conditioning issue reported at Head Office",
+      time: "10 minutes ago",
+    },
+    {
+      icon: "bi-box-seam",
+      title: "Asset assigned",
+      description: "Laptop assigned to Administration Department",
+      time: "35 minutes ago",
+    },
+    {
+      icon: "bi-clipboard-check",
+      title: "Inspection completed",
+      description: "Warehouse A safety inspection completed",
+      time: "1 hour ago",
+    },
+  ];
+
+  // Render recent activities
+  recentActivities.forEach(function (activity) {
+    $("#recentActivity").append(`
+    <div class="d-flex gap-3 py-3 border-bottom">
+      <div class="dashboard-activity-icon">
+        <i class="bi ${activity.icon}"></i>
+      </div>
+
+      <div class="flex-grow-1">
+        <p class="fw-semibold mb-1">${activity.title}</p>
+
+        <p class="text-muted mb-1">
+          ${activity.description}
+        </p>
+
+        <small class="text-muted">
+          ${activity.time}
+        </small>
+      </div>
+    </div>
   `);
   });
 
@@ -124,6 +239,7 @@ $(function () {
   $(window).on("resize", function () {
     if ($(window).width() >= 768) {
       $(".sidebar").removeClass("show");
+      $("#sidebarToggle").attr("aria-expanded", "false");
     }
   });
 });

@@ -104,6 +104,10 @@ a:hover {
 
 .sidebar {
   min-height: 100vh;
+  display: block;
+}
+.sidebar.show {
+  display: block;
 }
 
 .sidebar h4 {
@@ -301,9 +305,31 @@ textarea:focus {
   font-size: 1.4rem;
 }
 
+/* ---------- Dashboard summary cards ---------- */
+.dashboard-activity-icon i {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 2.5rem;
+  height: 2.5rem;
+
+  flex-shrink: 0;
+
+  border-radius: 0.5rem;
+  border-color: #f1f3f5;
+
+  font-size: 1.1rem;
+}
+
+/* ---------- Maintenance ---------- */
+.maintenance-filter {
+  width: auto;
+}
+
 /* ---------- Responsive Defaults ---------- */
 
-@media (max-width: 48rem) {
+@media (max-width: 47.999rem) {
   body {
     font-size: 0.9375rem;
   }
@@ -326,8 +352,6 @@ textarea:focus {
 
   .sidebar {
     display: none;
-    width: 100%;
-    min-height: auto;
   }
 
   .sidebar.show {
@@ -335,6 +359,10 @@ textarea:focus {
   }
 
   .main-content {
+    width: 100%;
+  }
+
+  .maintenance-filter {
     width: 100%;
   }
 }
