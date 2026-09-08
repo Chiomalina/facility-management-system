@@ -106,7 +106,7 @@ $(function () {
   });
 
   // Facility overview data
-  const facilities = [
+  const facilityOverviewData = [
     {
       name: "Head Office",
       occupancy: 82,
@@ -130,7 +130,7 @@ $(function () {
   ];
 
   // Render facility overview
-  facilities.forEach(function (facility) {
+  facilityOverviewData.forEach(function (facility) {
     $(".facilityOverview").append(`
       <div class="mb-4">
       <div class="d-flex justify-content-between align-items-center mb-2">
@@ -160,7 +160,7 @@ $(function () {
       `);
   });
 
-  // Recent activity data
+  // Recent activity data (Dashboard display data)
   const recentActivities = [
     {
       icon: "bi-tools",
@@ -225,6 +225,67 @@ $(function () {
       $(".sidebar").removeClass("show");
     }
   });
+
+  // Facility Management module data
+  const facilities = [
+    {
+      id: "FAC-001",
+      name: "Head Office",
+      type: "Office",
+      location: "Oberhausen",
+      manager: "Anna Müller",
+      status: "Active",
+    },
+    {
+      id: "FAC-002",
+      name: "Warehouse A",
+      type: "Warehouse",
+      location: "Essen",
+      manager: "David Schmidt",
+      status: "Active",
+    },
+    {
+      id: "FAC-003",
+      name: "Administration Block",
+      type: "Office",
+      location: "Oberhausen",
+      manager: "Sarah Weber",
+      status: "Under Maintenance",
+    },
+    {
+      id: "FAC-004",
+      name: "Teachers Block",
+      type: "Education",
+      location: "Oberhausen",
+      manager: "Michael Braun",
+      status: "Inactive",
+    },
+  ];
+
+  // Render facilities data
+  function renderFacilites() {
+    $("#facilitiesTableBody").empty();
+
+    facilities.forEach(function (facility) {
+      $("#facilitiesTableBody").append(`
+      <tr>
+    <td>${facility.id}</td>
+    <td>${facility.name}</td>
+    <td>${facility.type}</td>
+    <td>${facility.location}</td>
+    <td>${facility.manager}</td>
+    <td>${facility.status}</td>
+    <td>
+      <button type="button" class="btn btn-sm btn-outline-primary disabled">View</button
+    </td>
+    </tr>
+    `);
+    });
+  }
+
+  renderFacilites();
+
+
 
   // Toggle sidebar visibility on mobile
   $("#sidebarToggle").on("click", function () {
