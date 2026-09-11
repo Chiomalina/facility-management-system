@@ -295,6 +295,13 @@ $(function () {
             >
               View
             </button>
+            <button
+            type="button"
+            class="btn btn-sm btn-outline-secondary edit-facility-btn"
+            data-id="${facility.id}"
+          >
+            Edit
+          </button>
         </td>
     </tr>
     `);
@@ -325,20 +332,42 @@ $(function () {
       return;
     }
 
-    const newFacility = {
-      id: `FAC-${String(facilities.length + 1).padStart(3, "0")}`,
-      name: facilityName,
-      type: facilityType,
-      location: facilityLocation,
-      manager: facilityManager,
-      status: facilityStatus,
-    };
+    const editingFacilityId = $("#editingFacilityId").val();
 
-    facilities.push(newFacility);
+    if (editingFacilityId) {
+      const facilityToUpdate = facilities.find(function (facility) {
+        return facility.id === editingFacilityId;
+      });
+
+      if (!facilityToUpdate) {
+        return;
+      }
+
+      facilityToUpdate.name = facilityName;
+      facilityToUpdate.type = facilityType;
+      facilityToUpdate.location = facilityLocation;
+      facilityToUpdate.manager = facilityManager;
+      facilityToUpdate.status = facilityStatus;
+    } else {
+      const newFacility = {
+        id: `FAC-${String(facilities.length + 1).padStart(3, "0")}`,
+        name: facilityName,
+        type: facilityType,
+        location: facilityLocation,
+        manager: facilityManager,
+        status: facilityStatus,
+      };
+
+      facilities.push(newFacility);
+    }
+
+    this.reset();
 
     renderFacilities();
 
-    this.reset();
+    $("#editingFacilityId").val("");
+    $("#facilityModalLabel").text("Add Facility");
+    $("#facilityForm button[type='submit']").text("Save Facility");
 
     const facilityModal = bootstrap.Modal.getInstance(
       document.getElementById("facilityModal"),
@@ -388,6 +417,35 @@ $(function () {
     );
 
     detailsModal.show();
+  });
+
+  //Listen and Handle the Edith Button Click
+  $("#facilitiesTableBody").on("click", ".edit-facility-btn", function () {
+    const facilityId = $(this).data("id");
+
+    const selectedFacility = facilities.find(function (facility) {
+      return facility.id === facilityId;
+    });
+
+    if (!selectedFacility) {
+      return;
+    }
+
+    $("#editingFacilityId").val(selectedFacility.id);
+    $("#facilityName").val(selectedFacility.name);
+    $("#facilityType").val(selectedFacility.type);
+    $("#facilityLocation").val(selectedFacility.location);
+    $("#facilityManager").val(selectedFacility.manager);
+    $("#facilityStatus").val(selectedFacility.status);
+
+    $("#facilityModalLabel").text("Edit Facility");
+    $("#facilityForm button[type='submit']").text("Update Facility");
+
+    const facilityModal = new bootstrap.Modal(
+      document.getElementById("facilityModal"),
+    );
+
+    facilityModal.show();
   });
 
   //Facilities Search Logic
