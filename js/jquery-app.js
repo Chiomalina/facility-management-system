@@ -279,17 +279,23 @@ $(function () {
       }
       $("#facilitiesTableBody").append(`
       <tr>
-    <td>${facility.id}</td>
-    <td>${facility.name}</td>
-    <td>${facility.type}</td>
-    <td>${facility.location}</td>
-    <td>${facility.manager}</td>
-    <td>
-      <span class="badge ${statusClass}">${facility.status}</span>
-    </td>
-    <td>
-      <button type="button" class="btn btn-sm btn-outline-primary disabled">View</button
-    </td>
+        <td>${facility.id}</td>
+        <td>${facility.name}</td>
+        <td>${facility.type}</td>
+        <td>${facility.location}</td>
+        <td>${facility.manager}</td>
+        <td>
+          <span class="badge ${statusClass}">${facility.status}</span>
+        </td>
+        <td>
+            <button
+            type="button"
+            class="btn btn-sm btn-outline-primary view-facility-btn"
+            data-id="${facility.id}"
+            >
+              View
+            </button>
+        </td>
     </tr>
     `);
     });
@@ -339,6 +345,49 @@ $(function () {
     );
 
     facilityModal.hide();
+  });
+
+  // Listen for view button Click in Facility
+  $("#facilitiesTableBody").on("click", ".view-facility-btn", function () {
+    const facilityId = $(this).data("id");
+
+    const selectedFacility = facilities.find(function (facility) {
+      return facility.id === facilityId;
+    });
+
+    console.log(selectedFacility);
+
+    if (!selectedFacility) {
+      return;
+    }
+
+    $("#facilityDetailsBody").html(`
+    <dl class="row mb-0">
+      <dt class="col-sm-4">Facility ID</dt>
+      <dd class="col-sm-8">${selectedFacility.id}</dd>
+
+      <dt class="col-sm-4">Name</dt>
+      <dd class="col-sm-8">${selectedFacility.name}</dd>
+
+      <dt class="col-sm-4">Type</dt>
+      <dd class="col-sm-8">${selectedFacility.type}</dd>
+
+      <dt class="col-sm-4">Location</dt>
+      <dd class="col-sm-8">${selectedFacility.location}</dd>
+
+      <dt class="col-sm-4">Manager</dt>
+      <dd class="col-sm-8">${selectedFacility.manager}</dd>
+
+      <dt class="col-sm-4">Status</dt>
+      <dd class="col-sm-8">${selectedFacility.status}</dd>
+    </dl>
+  `);
+
+    const detailsModal = new bootstrap.Modal(
+      document.getElementById("facilityDetailsModal"),
+    );
+
+    detailsModal.show();
   });
 
   //Facilities Search Logic
