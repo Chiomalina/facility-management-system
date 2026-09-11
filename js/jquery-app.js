@@ -267,7 +267,6 @@ $(function () {
     $("#facilitiesTableBody").empty();
 
     facilities.forEach(function (facility) {
-      
       // Facilities Status Badges
       let statusClass = "bg-secondary";
 
@@ -340,6 +339,19 @@ $(function () {
     );
 
     facilityModal.hide();
+  });
+
+  //Facilities Search Logic
+  $("#facilitySearch").on("input", function () {
+    const searchTerm = $(this).val().trim().toLowerCase();
+
+    $("#facilitiesTableBody tr").each(function () {
+      const rowText = $(this).text().toLowerCase();
+
+      const matchesSearch = rowText.includes(searchTerm);
+
+      $(this).toggle(matchesSearch);
+    });
   });
 
   // Toggle sidebar visibility on mobile
