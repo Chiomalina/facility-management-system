@@ -160,6 +160,27 @@ $(function () {
       `);
   });
 
+  //Generate ID
+  function generateFacilityId() {
+    //create safe unique ID
+    const highestId = facilities.reduce(function (maxId, facility) {
+      const numericId = Number(facility.id.replace("FAC-", ""));
+
+      return Math.max(maxId, numericId);
+    }, 0);
+
+    return `FAC-${String(highestId + 1).padStart(3, "0")}`;
+  }
+
+  //Reset Facility Form
+  function resetFacilityForm() {
+    //restore Add Facility form state
+    $("#facilityForm")[0].reset();
+    $("#editingFacilityId").val("");
+    $("#facilityModalLabel").text("Add Facility");
+    $("#facilityForm button[type='submit']").text("Save Facility");
+  }
+
   // Recent activity data (Dashboard display data)
   const recentActivities = [
     {
@@ -262,8 +283,35 @@ $(function () {
     },
   ];
 
+  //Combine search and status filtering
+  function applyFacilityFilters() {
+    //combine search + status filtering
+    const searchTerm = $("#facilitySearch").val().trim().toLowerCase();
+    const selectedStatus = $("#facilityStatusFilter").val();
+
+    $("#noFacilityResults").remove();
+
+    $("#facilitiesTableBody tr")
+      .not(".empty-state-row")
+      .each(function () {
+        const rowText = $(this).text().toLowerCase();
+        const rowStatus = $(this).find("td:nth-child(6)").text().trim();
+
+        const matchesSearch = rowText.includes(searchTerm);
+
+        const matchesStatus =
+          selectedStatus === "all" || rowStatus === selectedStatus;
+
+        $(this).toggle(matchesSearch && matchesStatus);
+      });
+
+    updateFacilityEmptyState();
+  }
+
   // Render facilities data
   function renderFacilities() {
+    //Displays facility rows
+
     $("#facilitiesTableBody").empty();
 
     if (facilities.length === 0) {
@@ -328,6 +376,7 @@ $(function () {
   }
 
   function updateFacilityStats() {
+    //calculate summary cards
     const totalFacilities = facilities.length;
 
     const activeFacilities = facilities.filter(function (facility) {
@@ -391,7 +440,7 @@ $(function () {
       facilityToUpdate.status = facilityStatus;
     } else {
       const newFacility = {
-        id: `FAC-${String(facilities.length + 1).padStart(3, "0")}`,
+        id: generateFacilityId(),
         name: facilityName,
         type: facilityType,
         location: facilityLocation,
@@ -407,9 +456,7 @@ $(function () {
     renderFacilities();
     updateFacilityStats();
 
-    $("#editingFacilityId").val("");
-    $("#facilityModalLabel").text("Add Facility");
-    $("#facilityForm button[type='submit']").text("Save Facility");
+    resetFacilityForm();
 
     const facilityModal = bootstrap.Modal.getInstance(
       document.getElementById("facilityModal"),
@@ -520,6 +567,7 @@ $(function () {
 
   //No Search/Filter matches
   function updateFacilityEmptyState() {
+    //show no-results message
     $("#noFacilityResults").remove();
 
     const visibleRows = $("#facilitiesTableBody tr")
@@ -539,31 +587,14 @@ $(function () {
 
   //Facilities Search Logic
   $("#facilitySearch").on("input", function () {
-    const searchTerm = $(this).val().trim().toLowerCase();
-
-    $("#facilitiesTableBody tr").each(function () {
-      const rowText = $(this).text().toLowerCase();
-
-      const matchesSearch = rowText.includes(searchTerm);
-
-      $(this).toggle(matchesSearch);
-    });
+    applyFacilityFilters();
 
     updateFacilityEmptyState();
   });
 
   //Facilities Search by Status
   $("#facilityStatusFilter").on("change", function () {
-    const selectedStatus = $(this).val();
-
-    $("#facilitiesTableBody tr").each(function () {
-      const rowStatus = $(this).find("td:nth-child(6)").text().trim();
-
-      const matchesStatus =
-        selectedStatus === "all" || rowStatus === selectedStatus;
-
-      $(this).toggle(matchesStatus);
-    });
+    applyFacilityFilters();
     updateFacilityEmptyState();
   });
 
