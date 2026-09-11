@@ -348,6 +348,8 @@ $(function () {
           <span class="badge ${statusClass}">${facility.status}</span>
         </td>
         <td>
+        <div class="d-flex flex-wrap gap-2">
+
             <button
             type="button"
             class="btn btn-sm btn-outline-primary view-facility-btn"
@@ -369,6 +371,7 @@ $(function () {
           >
             Delete
           </button>
+          </div>
         </td>
     </tr>
     `);
