@@ -354,6 +354,20 @@ $(function () {
     });
   });
 
+  //Facilities Search by Status
+  $("#facilityStatusFilter").on("change", function () {
+    const selectedStatus = $(this).val();
+
+    $("#facilitiesTableBody tr").each(function () {
+      const rowStatus = $(this).find("td:nth-child(6)").text().trim();
+
+      const matchesStatus =
+        selectedStatus === "all" || rowStatus === selectedStatus;
+
+      $(this).toggle(matchesStatus);
+    });
+  });
+
   // Toggle sidebar visibility on mobile
   $("#sidebarToggle").on("click", function () {
     $(".sidebar").toggleClass("show");
