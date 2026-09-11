@@ -327,7 +327,29 @@ $(function () {
     });
   }
 
+  function updateFacilityStats() {
+    const totalFacilities = facilities.length;
+
+    const activeFacilities = facilities.filter(function (facility) {
+      return facility.status === "Active";
+    }).length;
+
+    const maintenanceFacilities = facilities.filter(function (facility) {
+      return facility.status === "Under Maintenance";
+    }).length;
+
+    const inactiveFacilities = facilities.filter(function (facility) {
+      return facility.status === "Inactive";
+    }).length;
+
+    $("#totalFacilities").text(totalFacilities);
+    $("#activeFacilities").text(activeFacilities);
+    $("#maintenanceFacilities").text(maintenanceFacilities);
+    $("#inactiveFacilities").text(inactiveFacilities);
+  }
+
   renderFacilities();
+  updateFacilityStats();
 
   //Handle adding a new facility
   $("#facilityForm").on("submit", function (event) {
@@ -383,6 +405,7 @@ $(function () {
     this.reset();
 
     renderFacilities();
+    updateFacilityStats();
 
     $("#editingFacilityId").val("");
     $("#facilityModalLabel").text("Add Facility");
@@ -492,6 +515,7 @@ $(function () {
     facilities.splice(facilityIndex, 1);
 
     renderFacilities();
+    updateFacilityStats();
   });
 
   //No Search/Filter matches
