@@ -266,6 +266,18 @@ $(function () {
   function renderFacilities() {
     $("#facilitiesTableBody").empty();
 
+    if (facilities.length === 0) {
+      $("#facilitiesTableBody").html(`
+      <tr class="empty-state-row">
+        <td colspan="7" class="text-center text-muted py-4">
+          No facilities have been added yet.
+        </td>
+      </tr>
+    `);
+
+      return;
+    }
+
     facilities.forEach(function (facility) {
       // Facilities Status Badges
       let statusClass = "bg-secondary";
@@ -482,6 +494,25 @@ $(function () {
     renderFacilities();
   });
 
+  //No Search/Filter matches
+  function updateFacilityEmptyState() {
+    $("#noFacilityResults").remove();
+
+    const visibleRows = $("#facilitiesTableBody tr")
+      .not(".empty-state-row")
+      .filter(":visible");
+
+    if (facilities.length > 0 && visibleRows.length === 0) {
+      $("#facilitiesTableBody").append(`
+      <tr id="noFacilityResults">
+        <td colspan="7" class="text-center text-muted py-4">
+          No matching facilities found.
+        </td>
+      </tr>
+    `);
+    }
+  }
+
   //Facilities Search Logic
   $("#facilitySearch").on("input", function () {
     const searchTerm = $(this).val().trim().toLowerCase();
@@ -493,6 +524,8 @@ $(function () {
 
       $(this).toggle(matchesSearch);
     });
+
+    updateFacilityEmptyState();
   });
 
   //Facilities Search by Status
@@ -507,6 +540,7 @@ $(function () {
 
       $(this).toggle(matchesStatus);
     });
+    updateFacilityEmptyState();
   });
 
   // Toggle sidebar visibility on mobile
