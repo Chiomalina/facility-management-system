@@ -295,6 +295,18 @@ $(function () {
     const facilityManager = $("#facilityManager").val().trim();
     const facilityStatus = $("#facilityStatus").val();
 
+    // Facility Form Validation
+    if (
+      !facilityName ||
+      !facilityType ||
+      !facilityLocation ||
+      !facilityManager ||
+      !facilityStatus
+    ) {
+      alert("Please complete all facility fields.");
+      return;
+    }
+
     const newFacility = {
       id: `FAC-${String(facilities.length + 1).padStart(3, "0")}`,
       name: facilityName,
