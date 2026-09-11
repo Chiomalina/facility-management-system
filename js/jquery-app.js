@@ -263,7 +263,7 @@ $(function () {
   ];
 
   // Render facilities data
-  function renderFacilites() {
+  function renderFacilities() {
     $("#facilitiesTableBody").empty();
 
     facilities.forEach(function (facility) {
@@ -283,9 +283,39 @@ $(function () {
     });
   }
 
-  renderFacilites();
+  renderFacilities();
 
+  //Handle adding a new facility
+  $("#facilityForm").on("submit", function (event) {
+    event.preventDefault();
 
+    const facilityName = $("#facilityName").val().trim();
+    const facilityType = $("#facilityType").val().trim();
+    const facilityLocation = $("#facilityLocation").val().trim();
+    const facilityManager = $("#facilityManager").val().trim();
+    const facilityStatus = $("#facilityStatus").val();
+
+    const newFacility = {
+      id: `FAC-${String(facilities.length + 1).padStart(3, "0")}`,
+      name: facilityName,
+      type: facilityType,
+      location: facilityLocation,
+      manager: facilityManager,
+      status: facilityStatus,
+    };
+
+    facilities.push(newFacility);
+
+    renderFacilities();
+
+    this.reset();
+
+    const facilityModal = bootstrap.Modal.getInstance(
+      document.getElementById("facilityModal"),
+    );
+
+    facilityModal.hide();
+  });
 
   // Toggle sidebar visibility on mobile
   $("#sidebarToggle").on("click", function () {
