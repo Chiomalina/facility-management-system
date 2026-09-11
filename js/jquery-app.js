@@ -302,6 +302,13 @@ $(function () {
           >
             Edit
           </button>
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-danger delete-facility-btn"
+            data-id="${facility.id}"
+          >
+            Delete
+          </button>
         </td>
     </tr>
     `);
@@ -419,7 +426,7 @@ $(function () {
     detailsModal.show();
   });
 
-  //Listen and Handle the Edith Button Click
+  //Listen and Handle the Edit Button Click
   $("#facilitiesTableBody").on("click", ".edit-facility-btn", function () {
     const facilityId = $(this).data("id");
 
@@ -446,6 +453,33 @@ $(function () {
     );
 
     facilityModal.show();
+  });
+
+  // Listen to and handle the delete button
+  $("#facilitiesTableBody").on("click", ".delete-facility-btn", function () {
+    const facilityId = $(this).data("id");
+
+    const facilityIndex = facilities.findIndex(function (facility) {
+      return facility.id === facilityId;
+    });
+
+    if (facilityIndex === -1) {
+      return;
+    }
+
+    const facility = facilities[facilityIndex];
+
+    const confirmed = confirm(
+      `Are you sure you want to delete "${facility.name}"?`,
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    facilities.splice(facilityIndex, 1);
+
+    renderFacilities();
   });
 
   //Facilities Search Logic
