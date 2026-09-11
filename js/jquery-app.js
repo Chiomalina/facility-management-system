@@ -267,6 +267,17 @@ $(function () {
     $("#facilitiesTableBody").empty();
 
     facilities.forEach(function (facility) {
+      
+      // Facilities Status Badges
+      let statusClass = "bg-secondary";
+
+      if (facility.status === "Active") {
+        statusClass = "bg-success";
+      } else if (facility.status === "Under Maintenance") {
+        statusClass = "bg-warning text-dark";
+      } else if (facility.status === "Inactive") {
+        statusClass = "bg-secondary";
+      }
       $("#facilitiesTableBody").append(`
       <tr>
     <td>${facility.id}</td>
@@ -274,7 +285,9 @@ $(function () {
     <td>${facility.type}</td>
     <td>${facility.location}</td>
     <td>${facility.manager}</td>
-    <td>${facility.status}</td>
+    <td>
+      <span class="badge ${statusClass}">${facility.status}</span>
+    </td>
     <td>
       <button type="button" class="btn btn-sm btn-outline-primary disabled">View</button
     </td>
