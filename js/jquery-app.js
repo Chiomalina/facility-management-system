@@ -736,12 +736,18 @@ $(function () {
     $tableBody.empty();
 
     assets.forEach((asset) => {
+      // Find the facility linked to this asset
+      const facility = facilities.find(
+        (facility) => facility.id === asset.facilityId,
+      );
+
+      const facilityName = facility ? facility.name : "Unknown Facility";
       const row = `
       <tr>
         <td>${asset.id}</td>
         <td>${asset.name}</td>
         <td>${asset.category}</td>
-        <td>${asset.facilityId}</td>
+        <td>${facilityName}</td>
         <td>${asset.serialNumber}</td>
         <td>${asset.purchaseDate}</td>
         <td>-</td>
