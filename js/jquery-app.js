@@ -625,83 +625,106 @@ $(function () {
       $("#sidebarToggle").attr("aria-expanded", "false");
     }
   });
-});
 
-/* ========================================
+  /* ========================================
    ASSET DATA
 ======================================== */
 
-const assets = [
-  {
-    id: "AST-001",
-    name: "Air Conditioner",
-    category: "HVAC",
-    facilityId: "FAC-001",
-    serialNumber: "AC-001-2024",
-    purchaseDate: "2024-03-15",
-    status: "Active",
-  },
-  {
-    id: "AST-002",
-    name: "Dell Office Computer",
-    category: "IT Equipment",
-    facilityId: "FAC-001",
-    serialNumber: "PC-DELL-002",
-    purchaseDate: "2025-01-20",
-    status: "Active",
-  },
-  {
-    id: "AST-003",
-    name: "Fire Extinguisher",
-    category: "Safety Equipment",
-    facilityId: "FAC-001",
-    serialNumber: "FE-003-2023",
-    purchaseDate: "2023-06-10",
-    status: "Inspection Due",
-  },
-  {
-    id: "AST-004",
-    name: "Main Circuit Box",
-    category: "Electrical",
-    facilityId: "FAC-002",
-    serialNumber: "CB-004-2022",
-    purchaseDate: "2022-09-05",
-    status: "Active",
-  },
-  {
-    id: "AST-005",
-    name: "HP Reception Computer",
-    category: "IT Equipment",
-    facilityId: "FAC-002",
-    serialNumber: "PC-HP-005",
-    purchaseDate: "2024-11-18",
-    status: "Maintenance",
-  },
-  {
-    id: "AST-006",
-    name: "Server Room Air Conditioner",
-    category: "HVAC",
-    facilityId: "FAC-003",
-    serialNumber: "AC-SRV-006",
-    purchaseDate: "2021-04-25",
-    status: "Active",
-  },
-  {
-    id: "AST-007",
-    name: "Emergency Fire Extinguisher",
-    category: "Safety Equipment",
-    facilityId: "FAC-003",
-    serialNumber: "FE-007-2025",
-    purchaseDate: "2025-02-14",
-    status: "Active",
-  },
-  {
-    id: "AST-008",
-    name: "Secondary Circuit Box",
-    category: "Electrical",
-    facilityId: "FAC-004",
-    serialNumber: "CB-008-2020",
-    purchaseDate: "2020-08-30",
-    status: "Out of Service",
-  },
-];
+  const assets = [
+    {
+      id: "AST-001",
+      name: "Air Conditioner",
+      category: "HVAC",
+      facilityId: "FAC-001",
+      serialNumber: "AC-001-2024",
+      purchaseDate: "2024-03-15",
+      status: "Active",
+    },
+    {
+      id: "AST-002",
+      name: "Dell Office Computer",
+      category: "IT Equipment",
+      facilityId: "FAC-001",
+      serialNumber: "PC-DELL-002",
+      purchaseDate: "2025-01-20",
+      status: "Active",
+    },
+    {
+      id: "AST-003",
+      name: "Fire Extinguisher",
+      category: "Safety Equipment",
+      facilityId: "FAC-001",
+      serialNumber: "FE-003-2023",
+      purchaseDate: "2023-06-10",
+      status: "Inspection Due",
+    },
+    {
+      id: "AST-004",
+      name: "Main Circuit Box",
+      category: "Electrical",
+      facilityId: "FAC-002",
+      serialNumber: "CB-004-2022",
+      purchaseDate: "2022-09-05",
+      status: "Active",
+    },
+    {
+      id: "AST-005",
+      name: "HP Reception Computer",
+      category: "IT Equipment",
+      facilityId: "FAC-002",
+      serialNumber: "PC-HP-005",
+      purchaseDate: "2024-11-18",
+      status: "Maintenance",
+    },
+    {
+      id: "AST-006",
+      name: "Server Room Air Conditioner",
+      category: "HVAC",
+      facilityId: "FAC-003",
+      serialNumber: "AC-SRV-006",
+      purchaseDate: "2021-04-25",
+      status: "Active",
+    },
+    {
+      id: "AST-007",
+      name: "Emergency Fire Extinguisher",
+      category: "Safety Equipment",
+      facilityId: "FAC-003",
+      serialNumber: "FE-007-2025",
+      purchaseDate: "2025-02-14",
+      status: "Active",
+    },
+    {
+      id: "AST-008",
+      name: "Secondary Circuit Box",
+      category: "Electrical",
+      facilityId: "FAC-004",
+      serialNumber: "CB-008-2020",
+      purchaseDate: "2020-08-30",
+      status: "Out of Service",
+    },
+  ];
+
+  function updateAssetSummary() {
+    const totalAssets = assets.length;
+
+    const activeAssets = assets.filter(
+      (asset) => asset.status === "Active",
+    ).length;
+
+    const maintenanceAssets = assets.filter(
+      (asset) => asset.status === "Maintenance",
+    ).length;
+
+    const outOfServiceAssets = assets.filter(
+      (asset) => asset.status === "Out of Service",
+    ).length;
+
+    $("#totalAssets").text(totalAssets);
+    $("#activeAssetCount").text(activeAssets);
+    $("#maintenanceAssetCount").text(maintenanceAssets);
+    $("#outOfServiceAssetCount").text(outOfServiceAssets);
+  }
+
+  updateAssetSummary();
+});
