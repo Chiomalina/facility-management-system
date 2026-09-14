@@ -727,4 +727,35 @@ $(function () {
   }
 
   updateAssetSummary();
+
+  // Rendering Asset table informations
+  function renderAssets() {
+    const $tableBody = $("#assetsTableBody");
+
+    // Clear existing rows before rendering
+    $tableBody.empty();
+
+    assets.forEach((asset) => {
+      const row = `
+      <tr>
+        <td>${asset.id}</td>
+        <td>${asset.name}</td>
+        <td>${asset.category}</td>
+        <td>${asset.facilityId}</td>
+        <td>${asset.serialNumber}</td>
+        <td>${asset.purchaseDate}</td>
+        <td>-</td>
+        <td>${asset.status}</td>
+        <td>
+          <button class="btn btn-sm btn-outline-primary">
+            View
+          </button>
+        </td>
+      </tr>
+    `;
+
+      $tableBody.append(row);
+    });
+  }
+  renderAssets();
 });

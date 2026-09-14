@@ -449,7 +449,33 @@
             <div id="assetFilters" class="mb-4"></div>
 
             <!-- Assets table will go here -->
-            <div id="assetsTableContainer"></div>
+            <!-- Assets table -->
+            <div class="card border-0 shadow-sm">
+              <div class="card-body">
+                <div class="table-responsive">
+                  <!-- assets table here -->
+                  <table class="table align-middle mb-0" id="assetsTable">
+                    <thead class="table-light">
+                      <tr>
+                        <th scope="col">Asset ID</th>
+                        <th scope="col">Asset Name</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Facility</th>
+                        <th scope="col">Serial Number</th>
+                        <th scope="col">Purchase Date</th>
+                        <th scope="col">Asset Age</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Action</th>
+                      </tr>
+                    </thead>
+
+                    <tbody id="assetsTableBody">
+                      <!-- Asset rows will be rendered here with jQuery -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
           </section>
         </main>
       </div>
