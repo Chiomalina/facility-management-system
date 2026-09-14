@@ -10,7 +10,7 @@ $(function () {
   };
 
   // Display dashboard summary values
-  $("#totalFacilities").text(dashboardData.totalFacilities);
+  $("#dashboardTotalFacilities").text(dashboardData.totalFacilities);
   $("#openRequests").text(dashboardData.openRequests);
   $("#availableSpaces").text(dashboardData.availableSpaces);
   $("#activeAssets").text(dashboardData.activeAssets);
@@ -239,7 +239,15 @@ $(function () {
 
     // Update topbar and content titles
     $(".page-title").text(pageTitle);
-    $(".content-title").text(pageTitle);
+
+    // Get the section connected to the clicked link
+    const sectionId = $(this).data("section");
+
+    // Show the correct content section
+    if (sectionId) {
+      $(".content-section").addClass("d-none");
+      $("#" + sectionId).removeClass("d-none");
+    }
 
     // Close sidebar after selection on mobile
     if ($(window).width() < 768) {
@@ -619,8 +627,6 @@ $(function () {
   });
 });
 
-
-
 /* ========================================
    ASSET DATA
 ======================================== */
@@ -633,7 +639,7 @@ const assets = [
     facilityId: "FAC-001",
     serialNumber: "AC-001-2024",
     purchaseDate: "2024-03-15",
-    status: "Active"
+    status: "Active",
   },
   {
     id: "AST-002",
@@ -642,7 +648,7 @@ const assets = [
     facilityId: "FAC-001",
     serialNumber: "PC-DELL-002",
     purchaseDate: "2025-01-20",
-    status: "Active"
+    status: "Active",
   },
   {
     id: "AST-003",
@@ -651,7 +657,7 @@ const assets = [
     facilityId: "FAC-001",
     serialNumber: "FE-003-2023",
     purchaseDate: "2023-06-10",
-    status: "Inspection Due"
+    status: "Inspection Due",
   },
   {
     id: "AST-004",
@@ -660,7 +666,7 @@ const assets = [
     facilityId: "FAC-002",
     serialNumber: "CB-004-2022",
     purchaseDate: "2022-09-05",
-    status: "Active"
+    status: "Active",
   },
   {
     id: "AST-005",
@@ -669,7 +675,7 @@ const assets = [
     facilityId: "FAC-002",
     serialNumber: "PC-HP-005",
     purchaseDate: "2024-11-18",
-    status: "Maintenance"
+    status: "Maintenance",
   },
   {
     id: "AST-006",
@@ -678,7 +684,7 @@ const assets = [
     facilityId: "FAC-003",
     serialNumber: "AC-SRV-006",
     purchaseDate: "2021-04-25",
-    status: "Active"
+    status: "Active",
   },
   {
     id: "AST-007",
@@ -687,7 +693,7 @@ const assets = [
     facilityId: "FAC-003",
     serialNumber: "FE-007-2025",
     purchaseDate: "2025-02-14",
-    status: "Active"
+    status: "Active",
   },
   {
     id: "AST-008",
@@ -696,6 +702,6 @@ const assets = [
     facilityId: "FAC-004",
     serialNumber: "CB-008-2020",
     purchaseDate: "2020-08-30",
-    status: "Out of Service"
-  }
+    status: "Out of Service",
+  },
 ];
