@@ -775,8 +775,9 @@ $(function () {
               ${asset.status}
             </span>
         <td>
-          <button class="btn btn-sm btn-outline-primary">
-            View
+          <button class="btn btn-sm btn-outline-secondary edit-asset-btn"
+          data-id="${asset.id}">
+            Edit
           </button>
         </td>
       </tr>
@@ -824,28 +825,76 @@ $(function () {
   // Handle Asset form submission
   $("#assetForm").on("submit", function (event) {
     event.preventDefault();
+    const editingAssetId = $("#editingAssetId").val();
 
-    const newAsset = {
-      id: `AST-${String(assets.length + 1).padStart(3, "0")}`,
-      name: $("#assetName").val().trim(),
-      category: $("#assetCategory").val(),
-      facilityId: $("#assetFacility").val(),
-      serialNumber: $("#assetSerialNumber").val().trim(),
-      purchaseDate: $("#assetPurchaseDate").val(),
-      status: $("#assetStatus").val(),
-    };
+    if (editingAssetId) {
+      const asset = assets.find((asset) => asset.id === editingAssetId);
 
-    assets.push(newAsset);
+      if (!asset) return;
+
+      asset.name = $("#assetName").val().trim();
+      asset.category = $("#assetCategory").val();
+      asset.facilityId = $("#assetFacility").val();
+      asset.serialNumber = $("#assetSerialNumber").val().trim();
+      asset.purchaseDate = $("#assetPurchaseDate").val();
+      asset.status = $("#assetStatus").val();
+    } else {
+      const newAsset = {
+        id: `AST-${String(assets.length + 1).padStart(3, "0")}`,
+        name: $("#assetName").val().trim(),
+        category: $("#assetCategory").val(),
+        facilityId: $("#assetFacility").val(),
+        serialNumber: $("#assetSerialNumber").val().trim(),
+        purchaseDate: $("#assetPurchaseDate").val(),
+        status: $("#assetStatus").val(),
+      };
+      assets.push(newAsset);
+    }
 
     renderAssets();
     updateAssetSummary();
 
     this.reset();
+    $("#editingAssetId").val("");
 
     const assetModal = bootstrap.Modal.getInstance(
       document.getElementById("assetModal"),
     );
 
     assetModal.hide();
+  });
+
+  $("#assetsTableBody").on("click", ".edit-asset-btn", function () {
+    const assetId = $(this).data("id");
+
+    const asset = assets.find((asset) => asset.id === assetId);
+
+    if (!asset) return;
+
+    $("#editingAssetId").val(asset.id);
+    $("#assetName").val(asset.name);
+    $("#assetCategory").val(asset.category);
+    $("#assetFacility").val(asset.facilityId);
+    $("#assetSerialNumber").val(asset.serialNumber);
+    $("#assetPurchaseDate").val(asset.purchaseDate);
+    $("#assetStatus").val(asset.status);
+
+    $("#assetModalLabel").text("Edit Asset");
+    $("#assetForm button[type='submit']").text("Update Asset");
+
+    const assetModal = new bootstrap.Modal(
+      document.getElementById("assetModal"),
+    );
+
+    assetModal.show();
+  });
+
+  // Reset the Modal back to ADD Mode
+  $("#addAssetBtn").on("click", function () {
+    $("#assetForm")[0].reset();
+    $("#editingAssetId").val("");
+
+    $("#assetModalLabel").text("Add Asset");
+    $("#assetForm button[type='submit']").text("Save Asset");
   });
 });
