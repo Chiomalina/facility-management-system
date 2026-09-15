@@ -786,4 +786,15 @@ $(function () {
     });
   }
   renderAssets();
+
+  /* ========================================
+   ASSET CATEGORIES
+======================================== */
+
+  const assetCategories = [
+    "HVAC",
+    "IT Equipment",
+    "Safety Equipment",
+    "Electrical",
+  ];
 });
