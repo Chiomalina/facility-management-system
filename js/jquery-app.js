@@ -797,4 +797,55 @@ $(function () {
     "Safety Equipment",
     "Electrical",
   ];
+
+  // Populate Category and facility dropdown
+  function populateAssetFormOptions() {
+    const $categorySelect = $("#assetCategory");
+    const $facilitySelect = $("#assetFacility");
+
+    $categorySelect.find("option:not(:first)").remove();
+    $facilitySelect.find("option:not(:first)").remove();
+
+    assetCategories.forEach((category) => {
+      $categorySelect.append(
+        `<option value="${category}">${category}</option>`,
+      );
+    });
+
+    facilities.forEach((facility) => {
+      $facilitySelect.append(
+        `<option value="${facility.id}">${facility.name}</option>`,
+      );
+    });
+  }
+
+  populateAssetFormOptions();
+
+  // Handle Asset form submission
+  $("#assetForm").on("submit", function (event) {
+    event.preventDefault();
+
+    const newAsset = {
+      id: `AST-${String(assets.length + 1).padStart(3, "0")}`,
+      name: $("#assetName").val().trim(),
+      category: $("#assetCategory").val(),
+      facilityId: $("#assetFacility").val(),
+      serialNumber: $("#assetSerialNumber").val().trim(),
+      purchaseDate: $("#assetPurchaseDate").val(),
+      status: $("#assetStatus").val(),
+    };
+
+    assets.push(newAsset);
+
+    renderAssets();
+    updateAssetSummary();
+
+    this.reset();
+
+    const assetModal = bootstrap.Modal.getInstance(
+      document.getElementById("assetModal"),
+    );
+
+    assetModal.hide();
+  });
 });
