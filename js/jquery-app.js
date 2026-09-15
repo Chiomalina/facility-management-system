@@ -742,6 +742,26 @@ $(function () {
       );
 
       const facilityName = facility ? facility.name : "Unknown Facility";
+
+      let statusClass = "bg-secondary";
+
+      switch (asset.status) {
+        case "Active":
+          statusClass = "bg-success";
+          break;
+
+        case "Maintenance":
+          statusClass = "bg-warning text-dark";
+          break;
+
+        case "Inspection Due":
+          statusClass = "bg-info text-dark";
+          break;
+
+        case "Out of Service":
+          statusClass = "bg-danger";
+          break;
+      }
       const row = `
       <tr>
         <td>${asset.id}</td>
@@ -751,7 +771,9 @@ $(function () {
         <td>${asset.serialNumber}</td>
         <td>${asset.purchaseDate}</td>
         <td>-</td>
-        <td>${asset.status}</td>
+        <td><span class="badge ${statusClass}">
+              ${asset.status}
+            </span>
         <td>
           <button class="btn btn-sm btn-outline-primary">
             View
