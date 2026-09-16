@@ -181,6 +181,14 @@ function renderAssets() {
             </span>
         </td>
         <td>
+        <div class="d-flex flex-wrap gap-2">
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-primary view-asset-btn"
+            data-id="${asset.id}"
+          >
+            View
+          </button>
           <button type="button" class="btn btn-sm btn-outline-secondary edit-asset-btn"
           data-id="${asset.id}">
             Edit
@@ -269,6 +277,52 @@ $(function () {
     );
 
     assetModal.show();
+  });
+
+  // View Asset details
+  $("#assetsTableBody").on("click", ".view-asset-btn", function () {
+    const assetId = $(this).data("id");
+
+    const selectedAsset = assets.find((asset) => asset.id === assetId);
+
+    if (!selectedAsset) return;
+
+    const facility = facilities.find(
+      (facility) => facility.id === selectedAsset.facilityId,
+    );
+
+    const facilityName = facility ? facility.name : "Unknown Facility";
+
+    $("#assetDetailsBody").html(`
+    <dl class="row mb-0">
+      <dt class="col-sm-4">Asset ID</dt>
+      <dd class="col-sm-8">${selectedAsset.id}</dd>
+
+      <dt class="col-sm-4">Asset Name</dt>
+      <dd class="col-sm-8">${selectedAsset.name}</dd>
+
+      <dt class="col-sm-4">Category</dt>
+      <dd class="col-sm-8">${selectedAsset.category}</dd>
+
+      <dt class="col-sm-4">Facility</dt>
+      <dd class="col-sm-8">${facilityName}</dd>
+
+      <dt class="col-sm-4">Serial Number</dt>
+      <dd class="col-sm-8">${selectedAsset.serialNumber}</dd>
+
+      <dt class="col-sm-4">Purchase Date</dt>
+      <dd class="col-sm-8">${selectedAsset.purchaseDate}</dd>
+
+      <dt class="col-sm-4">Status</dt>
+      <dd class="col-sm-8">${selectedAsset.status}</dd>
+    </dl>
+  `);
+
+    const assetDetailsModal = new bootstrap.Modal(
+      document.getElementById("assetDetailsModal"),
+    );
+
+    assetDetailsModal.show();
   });
 
   // Reset the Modal back to ADD Mode
