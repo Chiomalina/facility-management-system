@@ -200,6 +200,7 @@ function renderAssets() {
           >
             Delete
         </button>
+        </div>
         </td>
       </tr>
     `;
@@ -335,33 +336,44 @@ $(function () {
     </dl>
   `);
 
-    // Delete Asset
-    $("#assetsTableBody").on("click", ".delete-asset-btn", function () {
-      const assetId = $(this).data("id");
-
-      const assetIndex = assets.findIndex((asset) => asset.id === assetId);
-
-      if (assetIndex === -1) return;
-
-      const asset = assets[assetIndex];
-
-      const confirmed = confirm(
-        `Are you sure you want to delete "${asset.name}"?`,
-      );
-
-      if (!confirmed) return;
-
-      assets.splice(assetIndex, 1);
-
-      renderAssets();
-      updateAssetSummary();
-    });
-
     const assetDetailsModal = new bootstrap.Modal(
       document.getElementById("assetDetailsModal"),
     );
 
     assetDetailsModal.show();
+  });
+
+  // Delete Asset
+  $("#assetsTableBody").on("click", ".delete-asset-btn", function () {
+    const assetId = $(this).data("id");
+
+    const assetIndex = assets.findIndex((asset) => asset.id === assetId);
+
+    if (assetIndex === -1) return;
+
+    const asset = assets[assetIndex];
+
+    const confirmed = confirm(
+      `Are you sure you want to delete "${asset.name}"?`,
+    );
+
+    if (!confirmed) return;
+
+    assets.splice(assetIndex, 1);
+
+    renderAssets();
+    updateAssetSummary();
+  });
+
+  // Search Assets
+  $("#assetSearch").on("input", function () {
+    const searchTerm = $(this).val().trim().toLowerCase();
+
+    $("#assetsTableBody tr").each(function () {
+      const rowText = $(this).text().toLowerCase();
+
+      $(this).toggle(rowText.includes(searchTerm));
+    });
   });
 
   // Reset the Modal back to ADD Mode
