@@ -213,6 +213,24 @@ function renderAssets() {
    ASSET INITIALIZATION
 ======================================== */
 
+function applyAssetFilters() {
+  const searchTerm = $("#assetSearch").val().trim().toLowerCase();
+  const selectedStatus = $("#assetStatusFilter").val();
+
+  $("#assetsTableBody tr").each(function () {
+    const rowText = $(this).text().toLowerCase();
+
+    const rowStatus = $(this).find("td:nth-child(8)").text().trim();
+
+    const matchesSearch = rowText.includes(searchTerm);
+
+    const matchesStatus =
+      selectedStatus === "all" || rowStatus === selectedStatus;
+
+    $(this).toggle(matchesSearch && matchesStatus);
+  });
+}
+
 $(function () {
   populateAssetFormOptions();
   renderAssets();
@@ -367,13 +385,12 @@ $(function () {
 
   // Search Assets
   $("#assetSearch").on("input", function () {
-    const searchTerm = $(this).val().trim().toLowerCase();
+    applyAssetFilters();
+  });
 
-    $("#assetsTableBody tr").each(function () {
-      const rowText = $(this).text().toLowerCase();
-
-      $(this).toggle(rowText.includes(searchTerm));
-    });
+  // search Status
+  $("#assetStatusFilter").on("change", function () {
+    applyAssetFilters();
   });
 
   // Reset the Modal back to ADD Mode
