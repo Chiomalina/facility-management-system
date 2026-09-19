@@ -193,6 +193,13 @@ function renderAssets() {
           data-id="${asset.id}">
             Edit
           </button>
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-danger delete-asset-btn"
+            data-id="${asset.id}"
+          >
+            Delete
+        </button>
         </td>
       </tr>
     `;
@@ -209,6 +216,16 @@ $(function () {
   populateAssetFormOptions();
   renderAssets();
   updateAssetSummary();
+
+  function generateAssetId() {
+    const highestId = assets.reduce((maxId, asset) => {
+      const numericId = Number(asset.id.replace("AST-", ""));
+
+      return Math.max(maxId, numericId);
+    }, 0);
+
+    return `AST-${String(highestId + 1).padStart(3, "0")}`;
+  }
 
   // Handle Asset form submission
   // Add / Edit Asset
@@ -229,7 +246,7 @@ $(function () {
       asset.status = $("#assetStatus").val();
     } else {
       const newAsset = {
-        id: `AST-${String(assets.length + 1).padStart(3, "0")}`,
+        id: generateAssetId(),
         name: $("#assetName").val().trim(),
         category: $("#assetCategory").val(),
         facilityId: $("#assetFacility").val(),
@@ -317,6 +334,28 @@ $(function () {
       <dd class="col-sm-8">${selectedAsset.status}</dd>
     </dl>
   `);
+
+    // Delete Asset
+    $("#assetsTableBody").on("click", ".delete-asset-btn", function () {
+      const assetId = $(this).data("id");
+
+      const assetIndex = assets.findIndex((asset) => asset.id === assetId);
+
+      if (assetIndex === -1) return;
+
+      const asset = assets[assetIndex];
+
+      const confirmed = confirm(
+        `Are you sure you want to delete "${asset.name}"?`,
+      );
+
+      if (!confirmed) return;
+
+      assets.splice(assetIndex, 1);
+
+      renderAssets();
+      updateAssetSummary();
+    });
 
     const assetDetailsModal = new bootstrap.Modal(
       document.getElementById("assetDetailsModal"),
