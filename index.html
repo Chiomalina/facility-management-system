@@ -392,7 +392,9 @@
      ASSET MANAGEMENT SECTION
     ======================================== -->
           <section id="assetsSection" class="content-section d-none p-4">
-            <div class="d-flex justify-content-between align-items-center mb-4">
+            <div
+              class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4"
+            >
               <div>
                 <h2 class="content-title mb-1">Assets</h2>
                 <p class="text-muted mb-0">
@@ -451,55 +453,53 @@
               </div>
             </div>
 
-            <!-- Asset filters will go here -->
-            <div id="assetFilters" class="mb-4"></div>
-
             <!-- Search and filter assets -->
-            <div class="mb-3">
-              <label for="assetSearch" class="form-label">
-                Search Assets
-              </label>
+            <div class="row g-3 mb-4">
+              <div class="col-12 col-md-6 col-xl-3 mb-3">
+                <label for="assetSearch" class="form-label">
+                  Search Assets
+                </label>
 
-              <input
-                type="search"
-                class="form-control"
-                id="assetSearch"
-                placeholder="Search by ID, name, category, facility, serial number, or status"
-              />
-            </div>
+                <input
+                  type="search"
+                  class="form-control"
+                  id="assetSearch"
+                  placeholder="Search by ID, name, category, facility, serial number, or status"
+                />
+              </div>
+              <div class="col-12 col-md-6 col-xl-3 mb-3">
+                <label for="assetStatusFilter" class="form-label">
+                  Filter by Status
+                </label>
 
-            <div class="mb-3">
-              <label for="assetStatusFilter" class="form-label">
-                Filter by Status
-              </label>
+                <select class="form-select" id="assetStatusFilter">
+                  <option value="all">All Statuses</option>
+                  <option value="Active">Active</option>
+                  <option value="Maintenance">Maintenance</option>
+                  <option value="Inspection Due">Inspection Due</option>
+                  <option value="Out of Service">Out of Service</option>
+                </select>
+              </div>
 
-              <select class="form-select" id="assetStatusFilter">
-                <option value="all">All Statuses</option>
-                <option value="Active">Active</option>
-                <option value="Maintenance">Maintenance</option>
-                <option value="Inspection Due">Inspection Due</option>
-                <option value="Out of Service">Out of Service</option>
-              </select>
-            </div>
+              <div class="col-12 col-md-6 col-xl-3 mb-3">
+                <label for="assetFacilityFilter" class="form-label">
+                  Filter by Facility
+                </label>
 
-            <div class="mb-3">
-              <label for="assetFacilityFilter" class="form-label">
-                Filter by Facility
-              </label>
+                <select class="form-select" id="assetFacilityFilter">
+                  <option value="all">All Facilities</option>
+                </select>
+              </div>
 
-              <select class="form-select" id="assetFacilityFilter">
-                <option value="all">All Facilities</option>
-              </select>
-            </div>
+              <div class="col-12 col-md-6 col-xl-3 mb-3">
+                <label for="assetCategoryFilter" class="form-label">
+                  Filter by Category
+                </label>
 
-            <div class="mb-3">
-              <label for="assetCategoryFilter" class="form-label">
-                Filter by Category
-              </label>
-
-              <select class="form-select" id="assetCategoryFilter">
-                <option value="all">All Categories</option>
-              </select>
+                <select class="form-select" id="assetCategoryFilter">
+                  <option value="all">All Categories</option>
+                </select>
+              </div>
             </div>
 
             <!-- Assets table -->
@@ -542,7 +542,7 @@
       aria-labelledby="facilityModalLabel"
       aria-hidden="true"
     >
-      <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
           <div class="modal-header">
             <h2 class="modal-title fs-5" id="facilityModalLabel">
@@ -645,7 +645,7 @@
       aria-labelledby="facilityDetailsModalLabel"
       aria-hidden="true"
     >
-      <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
           <div class="modal-header">
             <h2 class="modal-title fs-5" id="facilityDetailsModalLabel">
@@ -675,7 +675,7 @@
       aria-labelledby="assetModalLabel"
       aria-hidden="true"
     >
-      <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
           <div class="modal-header">
             <h2 class="modal-title fs-5" id="assetModalLabel">Add Asset</h2>
@@ -781,7 +781,7 @@
       aria-labelledby="assetDetailsModalLabel"
       aria-hidden="true"
     >
-      <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
           <div class="modal-header">
             <h2 class="modal-title fs-5" id="assetDetailsModalLabel">
