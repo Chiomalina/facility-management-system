@@ -187,7 +187,7 @@ function renderAssets() {
         <td>${facilityName}</td>
         <td>${asset.serialNumber}</td>
         <td>${asset.purchaseDate}</td>
-        <td>-</td>
+        <td>${calculateAssetAge(asset.purchaseDate)}</td>
         <td><span class="badge ${statusClass}">
               ${asset.status}
             </span>
@@ -221,10 +221,64 @@ function renderAssets() {
   });
 }
 
-/* ========================================
-   ASSET INITIALIZATION
-======================================== */
+function generateAssetId() {
+  const highestId = assets.reduce((maxId, asset) => {
+    const numericId = Number(asset.id.replace("AST-", ""));
 
+    return Math.max(maxId, numericId);
+  }, 0);
+
+  return `AST-${String(highestId + 1).padStart(3, "0")}`;
+}
+
+function calculateAssetAge(purchaseDate) {
+  if (!purchaseDate) {
+    return "Unknown";
+  }
+
+  const [year, month, day] = purchaseDate.split("-").map(Number);
+
+  const purchase = new Date(year, month - 1, day);
+  const today = new Date();
+
+  // Invalid date protection
+  if (Number.isNaN(purchase.getTime())) {
+    return "Invalid date";
+  }
+
+  // Future date protection
+  if (purchase > today) {
+    return "Invalid purchase date";
+  }
+
+  let years = today.getFullYear() - purchase.getFullYear();
+  let months = today.getMonth() - purchase.getMonth();
+
+  if (today.getDate() < purchase.getDate()) {
+    months--;
+  }
+
+  if (months < 0) {
+    years--;
+    months += 12;
+  }
+
+  if (years === 0) {
+    return `${months} month${months !== 1 ? "s" : ""}`;
+  }
+
+  if (months === 0) {
+    return `${years} year${years !== 1 ? "s" : ""}`;
+  }
+
+  return `${years} year${years !== 1 ? "s" : ""}, ${months} month${
+    months !== 1 ? "s" : ""
+  }`;
+}
+
+/* ========================================
+   ASSET FILTER FUNCTIONS
+======================================== */
 function applyAssetFilters() {
   const searchTerm = $("#assetSearch").val().trim().toLowerCase();
   const selectedStatus = $("#assetStatusFilter").val();
@@ -240,6 +294,7 @@ function applyAssetFilters() {
   $("#assetsTableBody tr")
     .not(".empty-state-row")
     .each(function () {
+      // filter calculations...
       const rowText = $(this).text().toLowerCase();
 
       const rowCategory = $(this).find("td:nth-child(3)").text().trim();
@@ -311,25 +366,31 @@ function populateAssetCategoryFilter() {
   });
 }
 
+/* ========================================
+   ASSET INITIALIZATION
+======================================== */
+
 $(function () {
+  const today = new Date().toISOString().split("T")[0];
+
+  const purchaseDate = $("#assetPurchaseDate").val();
+
+  if (purchaseDate > today) {
+    alert("Purchase date cannot be in the future.");
+    return;
+  }
+
+  $("#assetPurchaseDate").attr("max", today);
+
+  // initial rendering
   populateAssetFormOptions();
   renderAssets();
   updateAssetSummary();
   populateAssetFacilityFilter();
   populateAssetCategoryFilter();
 
-  function generateAssetId() {
-    const highestId = assets.reduce((maxId, asset) => {
-      const numericId = Number(asset.id.replace("AST-", ""));
-
-      return Math.max(maxId, numericId);
-    }, 0);
-
-    return `AST-${String(highestId + 1).padStart(3, "0")}`;
-  }
-
   // Handle Asset form submission
-  // Add / Edit Asset
+  // Add Asset
   $("#assetForm").on("submit", function (event) {
     event.preventDefault();
     const editingAssetId = $("#editingAssetId").val();
@@ -397,6 +458,10 @@ $(function () {
     assetModal.show();
   });
 
+  renderAssets();
+  updateAssetSummary();
+  applyAssetFilters();
+
   // View Asset details
   $("#assetsTableBody").on("click", ".view-asset-btn", function () {
     const assetId = $(this).data("id");
@@ -410,6 +475,7 @@ $(function () {
     );
 
     const facilityName = facility ? facility.name : "Unknown Facility";
+    const assetAge = calculateAssetAge(selectedAsset.purchaseDate);
 
     $("#assetDetailsBody").html(`
     <dl class="row mb-0">
@@ -430,6 +496,9 @@ $(function () {
 
       <dt class="col-sm-4">Purchase Date</dt>
       <dd class="col-sm-8">${selectedAsset.purchaseDate}</dd>
+
+      <dt class="col-sm-4">Asset Age</dt>
+      <dd class="col-sm-8">${assetAge}</dd>
 
       <dt class="col-sm-4">Status</dt>
       <dd class="col-sm-8">${selectedAsset.status}</dd>
@@ -463,6 +532,7 @@ $(function () {
 
     renderAssets();
     updateAssetSummary();
+    applyAssetFilters();
   });
 
   // Search Assets
@@ -470,17 +540,17 @@ $(function () {
     applyAssetFilters();
   });
 
-  // Search Status
+  // Status Filter
   $("#assetStatusFilter").on("change", function () {
     applyAssetFilters();
   });
 
-  // Search Filter
+  // Facility Filter
   $("#assetFacilityFilter").on("change", function () {
     applyAssetFilters();
   });
 
-  // Search Category
+  // Category Filter
   $("#assetCategoryFilter").on("change", function () {
     applyAssetFilters();
   });
