@@ -140,6 +140,18 @@ function renderAssets() {
   // Clear existing rows before rendering
   $tableBody.empty();
 
+  if (assets.length === 0) {
+    $tableBody.html(`
+    <tr class="empty-state-row">
+      <td colspan="9" class="text-center text-muted py-4">
+        No assets have been added yet.
+      </td>
+    </tr>
+  `);
+
+    return;
+  }
+
   assets.forEach((asset) => {
     // Find the facility linked to this asset
     const facility = facilities.find(
@@ -217,6 +229,7 @@ function applyAssetFilters() {
   const searchTerm = $("#assetSearch").val().trim().toLowerCase();
   const selectedStatus = $("#assetStatusFilter").val();
   const selectedFacilityId = $("#assetFacilityFilter").val();
+  const selectedCategory = $("#assetCategoryFilter").val();
 
   const selectedFacility = facilities.find(
     (facility) => facility.id === selectedFacilityId,
@@ -224,23 +237,54 @@ function applyAssetFilters() {
 
   const selectedFacilityName = selectedFacility ? selectedFacility.name : "";
 
-  $("#assetsTableBody tr").each(function () {
-    const rowText = $(this).text().toLowerCase();
+  $("#assetsTableBody tr")
+    .not(".empty-state-row")
+    .each(function () {
+      const rowText = $(this).text().toLowerCase();
 
-    const rowFacility = $(this).find("td:nth-child(4)").text().trim();
+      const rowCategory = $(this).find("td:nth-child(3)").text().trim();
 
-    const rowStatus = $(this).find("td:nth-child(8)").text().trim();
+      const rowFacility = $(this).find("td:nth-child(4)").text().trim();
 
-    const matchesSearch = rowText.includes(searchTerm);
+      const rowStatus = $(this).find("td:nth-child(8)").text().trim();
 
-    const matchesStatus =
-      selectedStatus === "all" || rowStatus === selectedStatus;
+      const matchesSearch = rowText.includes(searchTerm);
 
-    const matchesFacility =
-      selectedFacilityId === "all" || rowFacility === selectedFacilityName;
+      const matchesStatus =
+        selectedStatus === "all" || rowStatus === selectedStatus;
 
-    $(this).toggle(matchesSearch && matchesStatus && matchesFacility);
-  });
+      const matchesFacility =
+        selectedFacilityId === "all" || rowFacility === selectedFacilityName;
+
+      const matchesCategory =
+        selectedCategory === "all" || rowCategory === selectedCategory;
+
+      $(this).toggle(
+        matchesSearch && matchesStatus && matchesFacility && matchesCategory,
+      );
+
+      // Check only after all rows have been filtered
+      updateAssetEmptyState();
+    });
+}
+
+// No Search / Filter matches
+function updateAssetEmptyState() {
+  $("#noAssetResults").remove();
+
+  const visibleRows = $("#assetsTableBody tr")
+    .not(".empty-state-row")
+    .filter(":visible");
+
+  if (assets.length > 0 && visibleRows.length === 0) {
+    $("#assetsTableBody").append(`
+      <tr id="noAssetResults">
+        <td colspan="9" class="text-center text-muted py-4">
+          No matching assets found.
+        </td>
+      </tr>
+    `);
+  }
 }
 
 // search by Facility
@@ -256,11 +300,23 @@ function populateAssetFacilityFilter() {
   });
 }
 
+// Search by Category
+function populateAssetCategoryFilter() {
+  const $categoryFilter = $("#assetCategoryFilter");
+
+  $categoryFilter.find("option:not(:first)").remove();
+
+  assetCategories.forEach((category) => {
+    $categoryFilter.append(`<option value="${category}">${category}</option>`);
+  });
+}
+
 $(function () {
   populateAssetFormOptions();
   renderAssets();
   updateAssetSummary();
   populateAssetFacilityFilter();
+  populateAssetCategoryFilter();
 
   function generateAssetId() {
     const highestId = assets.reduce((maxId, asset) => {
@@ -421,6 +477,11 @@ $(function () {
 
   // Search Filter
   $("#assetFacilityFilter").on("change", function () {
+    applyAssetFilters();
+  });
+
+  // Search Category
+  $("#assetCategoryFilter").on("change", function () {
     applyAssetFilters();
   });
 
