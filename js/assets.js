@@ -216,9 +216,18 @@ function renderAssets() {
 function applyAssetFilters() {
   const searchTerm = $("#assetSearch").val().trim().toLowerCase();
   const selectedStatus = $("#assetStatusFilter").val();
+  const selectedFacilityId = $("#assetFacilityFilter").val();
+
+  const selectedFacility = facilities.find(
+    (facility) => facility.id === selectedFacilityId,
+  );
+
+  const selectedFacilityName = selectedFacility ? selectedFacility.name : "";
 
   $("#assetsTableBody tr").each(function () {
     const rowText = $(this).text().toLowerCase();
+
+    const rowFacility = $(this).find("td:nth-child(4)").text().trim();
 
     const rowStatus = $(this).find("td:nth-child(8)").text().trim();
 
@@ -227,7 +236,23 @@ function applyAssetFilters() {
     const matchesStatus =
       selectedStatus === "all" || rowStatus === selectedStatus;
 
-    $(this).toggle(matchesSearch && matchesStatus);
+    const matchesFacility =
+      selectedFacilityId === "all" || rowFacility === selectedFacilityName;
+
+    $(this).toggle(matchesSearch && matchesStatus && matchesFacility);
+  });
+}
+
+// search by Facility
+function populateAssetFacilityFilter() {
+  const $facilityFilter = $("#assetFacilityFilter");
+
+  $facilityFilter.find("option:not(:first)").remove();
+
+  facilities.forEach((facility) => {
+    $facilityFilter.append(
+      `<option value="${facility.id}">${facility.name}</option>`,
+    );
   });
 }
 
@@ -235,6 +260,7 @@ $(function () {
   populateAssetFormOptions();
   renderAssets();
   updateAssetSummary();
+  populateAssetFacilityFilter();
 
   function generateAssetId() {
     const highestId = assets.reduce((maxId, asset) => {
@@ -388,8 +414,13 @@ $(function () {
     applyAssetFilters();
   });
 
-  // search Status
+  // Search Status
   $("#assetStatusFilter").on("change", function () {
+    applyAssetFilters();
+  });
+
+  // Search Filter
+  $("#assetFacilityFilter").on("change", function () {
     applyAssetFilters();
   });
 

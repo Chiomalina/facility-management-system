@@ -454,7 +454,7 @@
             <!-- Asset filters will go here -->
             <div id="assetFilters" class="mb-4"></div>
 
-            <!-- Assets table will go here -->
+            <!-- Search and filter assets -->
             <div class="mb-3">
               <label for="assetSearch" class="form-label">
                 Search Assets
@@ -481,7 +481,17 @@
                 <option value="Out of Service">Out of Service</option>
               </select>
             </div>
-            
+
+            <div class="mb-3">
+              <label for="assetFacilityFilter" class="form-label">
+                Filter by Facility
+              </label>
+
+              <select class="form-select" id="assetFacilityFilter">
+                <option value="all">All Facilities</option>
+              </select>
+            </div>
+
             <!-- Assets table -->
             <div class="card border-0 shadow-sm">
               <div class="card-body">
